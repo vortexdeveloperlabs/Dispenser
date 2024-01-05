@@ -1,1 +1,4 @@
-config.json
+config.ts
+sync.sh
+ssh.sh
+sshRoot.sh
