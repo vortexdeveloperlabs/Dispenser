@@ -21,13 +21,17 @@ import Responder from "./util/responder.ts";
 
 import isAdmin from "./util/isAdmin.ts";
 
-import data from "./config.json" assert { type: "json" };
+import Logger from "./util/Logger.ts";
+
+import data from "./config.ts";
 
 const commands = new Collection();
 
+const isDebug = Deno.args.includes("--debug");
+
 const baseBot: Bot = createBot({
     token: data.token,
-    botId: BigInt(data.id),
+    botId: BigInt(data.bot.id),
     events: {
         ready(): void {
             console.log("Ready!");
@@ -38,7 +42,7 @@ const baseBot: Bot = createBot({
                     const responder = new Responder(
                         bot,
                         interaction.id,
-                        interaction.token,
+                        interaction.token
                     );
 
                     // deno-lint-ignore no-explicit-any
@@ -50,23 +54,23 @@ const baseBot: Bot = createBot({
                         command?.adminOnly &&
                         !(await isAdmin(
                             interaction.member,
-                            String(interaction.guildId),
+                            String(interaction.guildId)
                         ))
                     ) {
-                        console.log(
-                            `${interaction.user.username} tried to run ${command.data.name} without permission`,
+                        console.error(
+                            `${interaction.user.username} tried to run ${command.data.name} without permission`
                         );
                         return await responder.respond(
-                            "You don't have permission to run this command!",
+                            "You don't have permission to run this command!"
                         );
                     }
 
                     try {
                         await command?.handle(bot, interaction);
                     } catch (err) {
-                        console.log(
-                            `Error running ${command.data.name}: ${err.stack}`,
-                        );
+                        const errFmt = `Error running ${command.data.name}: ${err.stack}`;
+                        if (isDebug) throw new Error(errFmt);
+                        else console.error(errFmt);
                     }
                 } else if (
                     interaction.type === InteractionTypes.MessageComponent
@@ -75,7 +79,7 @@ const baseBot: Bot = createBot({
 
                     const id: string = interaction.data.customId || "";
 
-                    console.log(`Interacting with ${id}`);
+                    if (isDebug) console.log(`Interacting with ${id}`);
 
                     const isDmRequest = id === "dmRequest";
                     const isRequest = id === "request";
