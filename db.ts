@@ -1,4 +1,4 @@
-import { ObjectId } from "https://deno.land/x/atlas_sdk@v1.1.2/mod.ts";
+import { ObjectId } from "npm:mongodb";
 
 import config from "./config.ts";
 
@@ -47,7 +47,7 @@ interface LogChannels {
     id: string;
 }
 
-const db = config.mongoClient.database("Dispenser");
+const db = config.mongoClient.db("bot");
 
 const filtersDb = db.collection<UserFilter>("filter");
 const catsDb = db.collection<UserCategory>("cat");
