@@ -21,17 +21,15 @@ import Responder from "./util/responder.ts";
 
 import isAdmin from "./util/isAdmin.ts";
 
-import Logger from "./util/Logger.ts";
-
-import data from "./config.ts";
+import config from "./config.ts";
 
 const commands = new Collection();
 
 const isDebug = Deno.args.includes("--debug");
 
 const baseBot: Bot = createBot({
-    token: data.token,
-    botId: BigInt(data.bot.id),
+    token: config.bot.token,
+    botId: BigInt(config.bot.id),
     events: {
         ready(): void {
             console.log("Ready!");

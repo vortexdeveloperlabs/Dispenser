@@ -1,13 +1,6 @@
-import {
-    MongoClient,
-    ObjectId,
-} from "https://deno.land/x/mongo@v0.30.1/mod.ts";
+import { ObjectId } from "https://deno.land/x/atlas_sdk@v1.1.2/mod.ts";
 
-import data from "./config.ts";
-
-const client = new MongoClient();
-
-await client.connect(data.mongoURL ?? "mongodb://127.0.0.1:27017");
+import config from "./config.ts";
 
 interface UserFilter {
     guildId: string;
@@ -54,7 +47,7 @@ interface LogChannels {
     id: string;
 }
 
-const db = client.database("bot");
+const db = config.mongoClient.database("Dispenser");
 
 const filtersDb = db.collection<UserFilter>("filter");
 const catsDb = db.collection<UserCategory>("cat");

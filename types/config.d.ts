@@ -1,3 +1,5 @@
+import { MongoClient } from "https://deno.land/x/atlas_sdk@v1.1.2/mod.ts";
+
 // Generic Types
 type Digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
 type IsNumber<S extends string> = S extends `${Digit}${Rest}`
@@ -28,6 +30,6 @@ declare namespace ConfigTypes {
         bot: BotConfig;
         // This is useful if you have a bot for testing, so you can experiment without affecting your users.
         devBot?: BotConfig;
-        mongoURL?: string;
+        mongoClient: MongoClient;
     }
 }
