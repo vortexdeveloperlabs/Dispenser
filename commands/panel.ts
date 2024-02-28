@@ -72,26 +72,29 @@ const data = {
 async function handle(bot: Bot, interaction: Interaction) {
     const responder = new Responder(bot, interaction.id, interaction.token);
 
-    const dmUser = interaction.data?.options?.find(o => o.name === "dm")?.value;
-    const report = interaction.data?.options?.find(o => o.name === "report")
-        ?.value;
+    const dmUser = interaction.data?.options?.find(
+        opt => opt.name === "dm"
+    )?.value;
+    const report = interaction.data?.options?.find(
+        opt => opt.name === "report"
+    )?.value;
     const title =
-        interaction.data?.options?.find(o => o.name === "title")?.value ||
+        interaction.data?.options?.find(opt => opt.name === "title")?.value ||
         "Selection";
     const catTitle =
-        interaction.data?.options?.find(o => o.name === "cat")?.value ||
+        interaction.data?.options?.find(opt => opt.name === "cat")?.value ||
         "Select a proxy site";
     const filterTitle =
-        interaction.data?.options?.find(o => o.name === "filter")?.value ||
+        interaction.data?.options?.find(opt => opt.name === "filter")?.value ||
         "Select your filters";
     const footer =
-        interaction.data?.options?.find(o => o.name === "footer")?.value ||
-        "Made by Haven";
+        interaction.data?.options?.find(opt => opt.name === "footer")?.value ||
+        "Hosted by Vyper Group";
     const button =
-        interaction.data?.options?.find(o => o.name === "button")?.value ||
+        interaction.data?.options?.find(opt => opt.name === "button")?.value ||
         "Request";
     const color =
-        interaction.data?.options?.find(o => o.name === "color")?.value ||
+        interaction.data?.options?.find(opt => opt.name === "color")?.value ||
         "e071ac";
 
     const links = await linksDb
@@ -106,7 +109,7 @@ async function handle(bot: Bot, interaction: Interaction) {
             links
                 .map(entry => entry.cat)
                 .filter(entry => typeof entry !== "undefined")
-                .sort(),
+                .sort()
         ),
     ];
 
@@ -196,7 +199,7 @@ async function handle(bot: Bot, interaction: Interaction) {
     return await bot.helpers.sendInteractionResponse(
         interaction.id,
         interaction.token,
-        embed,
+        embed
     );
 }
 
