@@ -2,3 +2,7 @@ config.ts
 sync.sh
 ssh.sh
 sshRoot.sh
+
+# Logging
+stderr.txt
+stdlog.txt

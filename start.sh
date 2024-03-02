@@ -1,3 +1,2 @@
-nohup mongod >/dev/null 2>&1
 pkill deno
-deno run --allow-read --allow-net app.ts
+deno run --allow-read --allow-net --allow-sys app.ts > stdlog.txt 2>stderr.txt &
