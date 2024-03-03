@@ -3,6 +3,8 @@ sync.sh
 ssh.sh
 sshRoot.sh
 
+# Package managers
+**/deno.lock
+
 # Logging
-stderr.txt
-stdlog.txt
+logs/
