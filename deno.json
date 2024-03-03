@@ -1,6 +1,8 @@
 {
     "imports": {
         "$config": "./config.ts",
-        "$db": "./db.ts"
+        "$db": "./src/db.ts",
+        "discordeno": "https://deno.land/x/discordeno@17.0.1/mod.ts",
+        "keyv-mongodb": "npm:keyv-mongodb"
     }
 }

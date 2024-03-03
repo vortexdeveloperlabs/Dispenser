@@ -1,4 +1,4 @@
-import { Member } from "https://deno.land/x/discordeno@17.0.1/mod.ts";
+import { Member } from "discordeno";
 
 import { validatePermissions } from "https://deno.land/x/discordeno@17.0.1/plugins/mod.ts";
 

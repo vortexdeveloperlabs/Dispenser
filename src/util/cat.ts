@@ -1,4 +1,4 @@
-import { Bot, Interaction } from "https://deno.land/x/discordeno@17.0.1/mod.ts";
+import { Bot, Interaction } from "discordeno";
 
 import getLinks from "./links.ts";
 import Responder from "../util/responder.ts";

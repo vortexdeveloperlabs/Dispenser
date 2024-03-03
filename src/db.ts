@@ -47,6 +47,16 @@ interface LogChannels {
     id: string;
 }
 
+interface FaultToleranceAPI {
+    // The key
+    nodeHost: string;
+    // The value
+    brokenCommands: {
+        commandName: string;
+        errorMessage?: string;
+    }[];
+}
+
 const db = config.mongoClient.db("bot");
 
 const filtersDb = db.collection<UserFilter>("filter");
@@ -57,4 +67,15 @@ const limitsDb = db.collection<Limit>("limit");
 const rolesDb = db.collection<Roles>("roles");
 const chansDb = db.collection<LogChannels>("chans");
 
-export { catsDb, filtersDb, usersDb, linksDb, limitsDb, rolesDb, chansDb };
+const faultToleranceDb = db.collection<FaultToleranceAPI>("faultToleranceAPI");
+
+export {
+    catsDb,
+    filtersDb,
+    usersDb,
+    linksDb,
+    limitsDb,
+    rolesDb,
+    chansDb,
+    faultToleranceDb,
+};
