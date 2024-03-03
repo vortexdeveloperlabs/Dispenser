@@ -12,3 +12,7 @@
 -   Implement [fault tolerance](./Fault%20tolerance.md):
     -   In the command handler, whenever it errors, set in the database using the command name as a key, true, meaning the command threw an error in the last execution. Even if successful, check if the under that key, the value is false. If it is false, reset it, to bring it back to true.
 -   TODO: ...
+
+## Documentation
+
+-   [ ] Explain how to make and use a systemd service for Dispenser - Flyaway
