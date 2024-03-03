@@ -21,6 +21,8 @@ import Responder from "./util/responder.ts";
 
 import isAdmin from "./util/isAdmin.ts";
 
+import { faultToleranceDb } from "$db";
+
 const commands = new Collection();
 
 const isDebug = Deno.args.includes("--debug");
@@ -54,6 +56,8 @@ export default async function initBot(
 
                         if (!command) return;
 
+                        const commandName = command.data.name;
+
                         if (
                             command?.adminOnly &&
                             !(await isAdmin(
@@ -71,10 +75,19 @@ export default async function initBot(
 
                         try {
                             await command?.handle(bot, interaction);
+
+                            faultToleranceDb.deleteMany({
+                                commandName,
+                            });
                         } catch (err) {
                             const errFmt = `Error running ${command.data.name}: ${err.stack}`;
                             if (isDebug) throw new Error(errFmt);
                             else console.error(errFmt);
+
+                            await faultToleranceDb.insertOne({
+                                commandName,
+                                error: err.message,
+                            });
                         }
                     } else if (
                         interaction.type === InteractionTypes.MessageComponent

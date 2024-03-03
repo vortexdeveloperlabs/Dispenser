@@ -9,8 +9,8 @@
 -   [ ] Implement [Enchanced logging functionality](./Logging.md):
     -   [ ] Add channel logging
     -   [ ] Colorize the output in the server logs by using a proper logger
--   [ ] Implement [fault tolerance](./Fault%20tolerance.md):
-    -   [ ] In the command handler, whenever it errors, set in the database using the command name as a key, true, meaning the command threw an error in the last execution. Even if successful, check if the under that key, the value is false. If it is false, reset it, to bring it back to true.
+-   [x] Implement [fault tolerance](./Fault%20tolerance.md):
+    -   [x] Implement it in the bot itself
     -   [x] Implement the APIs
 -   TODO: ...
 
