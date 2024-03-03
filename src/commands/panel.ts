@@ -8,7 +8,7 @@ import {
     InteractionResponseTypes,
 } from "https://deno.land/x/discordeno@13.0.0-rc45/mod.ts";
 
-import { linksDb } from "../db.ts";
+import { linksDb } from "$db";
 
 import Responder from "../util/responder.ts";
 

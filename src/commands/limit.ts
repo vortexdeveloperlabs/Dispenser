@@ -4,7 +4,7 @@ import {
     Interaction,
 } from "https://deno.land/x/discordeno@17.0.1/mod.ts";
 
-import { limitsDb } from "../db.ts";
+import { limitsDb } from "$db";
 
 import Responder from "../util/responder.ts";
 
@@ -55,12 +55,12 @@ async function handle(bot: Bot, interaction: Interaction): Promise<void> {
         },
         {
             upsert: true,
-        },
+        }
     );
 
     await responder.respond(
         `Set the limit to ${limit}` +
-            (premiumLimit ? `and the premium limit to ${premiumLimit}!` : "!"),
+            (premiumLimit ? `and the premium limit to ${premiumLimit}!` : "!")
     );
 }
 

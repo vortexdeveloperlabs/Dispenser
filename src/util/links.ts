@@ -1,6 +1,6 @@
-import blocked from "../checker/ls.ts";
+import blocked from "./checker/ls.ts";
 
-import { linksDb } from "../db.ts";
+import { linksDb } from "$db";
 
 const noLinksMessage = (filter: string): string =>
     `There are no links unblocked for ${filter}`;
@@ -9,7 +9,7 @@ export default async (
     guildId: string,
     ownedLinks: Array<string>,
     filters: Array<string>,
-    cat: string,
+    cat: string
 ) => {
     const cursor = await linksDb.find({
         guildId: guildId,
@@ -32,14 +32,17 @@ export default async (
 
     if (filters.includes("ls")) {
         unblockedList = unblockedList.filter(
-            async link => await !blocked(link),
+            async link => await !blocked(link)
         );
 
+        /*
+        TODO: For debug mode only
         console.log(
             `These ${cat} links are unblocked for Lightspeed ${unblockedList.join(
                 ", ",
             )}`,
         );
+        */
 
         if (links.length === 0) return noLinksMessage("Lightspeed");
     }

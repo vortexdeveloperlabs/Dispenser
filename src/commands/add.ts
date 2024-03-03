@@ -4,7 +4,7 @@ import {
     Interaction,
 } from "https://deno.land/x/discordeno@17.0.1/mod.ts";
 
-import { linksDb } from "../db.ts";
+import { linksDb } from "$db";
 
 import Responder from "../util/responder.ts";
 
@@ -25,6 +25,12 @@ const data = {
             description: "The proxy site to categorize the link",
             required: true,
         },
+        {
+            type: ApplicationCommandTypes.Message,
+            name: "premium",
+            description: "Is the link for premium users only (y/n)?",
+            required: true,
+        },
     ],
     dmPermission: false,
 };
@@ -34,11 +40,13 @@ async function handle(bot: Bot, interaction: Interaction): Promise<void> {
 
     const link = interaction.data?.options?.[0]?.value;
     const cat = interaction.data?.options?.[1]?.value;
+    const isPremium = interaction.data?.options?.[1]?.value;
 
     const toInsert = {
         guildId: String(interaction.guildId),
-        link: link,
-        cat: cat,
+        link,
+        cat,
+        // TODO: isPremium,
     };
 
     if (await linksDb.findOne(toInsert))

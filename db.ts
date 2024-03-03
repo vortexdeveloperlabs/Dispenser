@@ -1,6 +1,6 @@
 import { ObjectId } from "npm:mongodb";
 
-import config from "./config.ts";
+import config from "$config";
 
 interface UserFilter {
     guildId: string;

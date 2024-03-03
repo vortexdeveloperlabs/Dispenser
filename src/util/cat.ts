@@ -1,9 +1,9 @@
 import { Bot, Interaction } from "https://deno.land/x/discordeno@17.0.1/mod.ts";
 
-import getLinks from "../util/links.ts";
+import getLinks from "./links.ts";
 import Responder from "../util/responder.ts";
 
-import { catsDb } from "../db.ts";
+import { catsDb } from "$db";
 
 export default async function (bot: Bot, interaction: Interaction) {
     const responder = new Responder(bot, interaction.id, interaction.token);
@@ -29,7 +29,7 @@ export default async function (bot: Bot, interaction: Interaction) {
         },
         {
             upsert: true,
-        },
+        }
     );
 
     return await responder.respond("Updated ✅");

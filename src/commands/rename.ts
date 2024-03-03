@@ -5,7 +5,7 @@ import {
     Interaction,
 } from "https://deno.land/x/discordeno@17.0.1/mod.ts";
 
-import { catsDb, linksDb } from "../db.ts";
+import { catsDb, linksDb } from "$db";
 
 import Responder from "../util/responder.ts";
 
@@ -50,7 +50,7 @@ async function handle(bot: Bot, interaction: Interaction) {
         },
         {
             upsert: true,
-        },
+        }
     );
 
     await linksDb.updateMany(
@@ -65,7 +65,7 @@ async function handle(bot: Bot, interaction: Interaction) {
         },
         {
             upsert: true,
-        },
+        }
     );
 
     responder(`Renamed ${cat1} to ${cat2}`);

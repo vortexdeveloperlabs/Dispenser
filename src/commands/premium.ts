@@ -5,7 +5,7 @@ import {
     Interaction,
 } from "https://deno.land/x/discordeno@17.0.1/mod.ts";
 
-import { rolesDb } from "../db.ts";
+import { rolesDb } from "$db";
 
 import Responder from "../util/responder.ts";
 
@@ -42,7 +42,7 @@ async function handle(bot: Bot, interaction: Interaction) {
         },
         {
             upsert: true,
-        },
+        }
     );
 
     return await responder.respond(`Gave premium status to ${roleId}`);

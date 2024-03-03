@@ -5,7 +5,7 @@ import {
     Interaction,
 } from "https://deno.land/x/discordeno@17.0.1/mod.ts";
 
-import { usersDb } from "../db.ts";
+import { usersDb } from "$db";
 
 import Responder from "../util/responder.ts";
 
@@ -57,7 +57,7 @@ async function handle(bot: Bot, interaction: Interaction) {
         },
         {
             upsert: true,
-        },
+        }
     );
 
     return await responder.respond(`Reset ${user}'s proxy limit!`);

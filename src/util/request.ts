@@ -3,7 +3,7 @@ import { Bot, Interaction } from "https://deno.land/x/discordeno@17.0.1/mod.ts";
 import getLinks from "../util/links.ts";
 import Responder from "../util/responder.ts";
 
-import { catsDb, usersDb, limitsDb, filtersDb } from "../db.ts";
+import { catsDb, usersDb, limitsDb, filtersDb } from "$db";
 
 import isPremium from "../util/isPremium.ts";
 import isAdmin from "../util/isAdmin.ts";
@@ -11,7 +11,7 @@ import isAdmin from "../util/isAdmin.ts";
 export default async function (
     bot: Bot,
     interaction: Interaction,
-    dmUser: boolean,
+    dmUser: boolean
 ) {
     const responder = new Responder(bot, interaction.id, interaction.token);
 
@@ -86,7 +86,7 @@ export default async function (
 
     if (!noLimit && times >= limit) {
         console.log(
-            `${name} reached the limit for ${cat}! ${user?.times}/${limit}`,
+            `${name} reached the limit for ${cat}! ${user?.times}/${limit}`
         );
         return await responder.respond("You have reached the monthly limit");
     }
@@ -100,8 +100,8 @@ export default async function (
 
     console.log(
         `${name} requested a ${cat} link. So far ${name} has these links: ${links.join(
-            ", ",
-        )}; having a total of ${times} links`,
+            ", "
+        )}; having a total of ${times} links`
     );
 
     const link = await getLinks(guildId, links, filters, cat);
@@ -109,7 +109,7 @@ export default async function (
     if (link instanceof Error) return await responder.respond(link.message);
     else if (typeof link !== "string") {
         return await responder.respond(
-            "Unknown error retrieving link; this incident has been reported!",
+            "Unknown error retrieving link; this incident has been reported!"
         );
     }
 
@@ -125,7 +125,7 @@ export default async function (
         },
         {
             upsert: true,
-        },
+        }
     );
 
     if (dmUser) {

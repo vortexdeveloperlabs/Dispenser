@@ -4,7 +4,7 @@ import {
     Interaction,
 } from "https://deno.land/x/discordeno@17.0.1/mod.ts";
 
-import { linksDb, limitsDb, rolesDb } from "../db.ts";
+import { linksDb, limitsDb, rolesDb } from "$db";
 
 import Responder from "../util/responder.ts";
 
@@ -58,7 +58,7 @@ async function handle(bot: Bot, interaction: Interaction): Promise<void> {
                 else line += `*${link.cat}* Link: ${link.link}`;
 
                 return line;
-            }),
+            })
         );
 
         return (

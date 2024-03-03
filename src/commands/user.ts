@@ -5,7 +5,7 @@ import {
     Interaction,
 } from "https://deno.land/x/discordeno@17.0.1/mod.ts";
 
-import { usersDb } from "../db.ts";
+import { usersDb } from "$db";
 
 import Responder from "../util/responder.ts";
 
@@ -56,11 +56,11 @@ async function handle(bot: Bot, interaction: Interaction) {
                     userId === interaction.user.id
                         ? "You have"
                         : `${user.username} has not`
-                } used the bot`,
+                } used the bot`
             );
 
         return await responder.respond(
-            `Links: ${data.links.join(", \n")}\nTimes: ${data.times}`,
+            `Links: ${data.links.join(", \n")}\nTimes: ${data.times}`
         );
     } else {
         const data = await usersDb
@@ -76,7 +76,7 @@ async function handle(bot: Bot, interaction: Interaction) {
                     user.id === interaction.user.id
                         ? "You have"
                         : `${user.username} has`
-                } not used the bot`,
+                } not used the bot`
             );
 
         return await responder.respond(
@@ -85,9 +85,9 @@ async function handle(bot: Bot, interaction: Interaction) {
                     o =>
                         `**${o.cat}**\nLinks: ${o.links.join(", ")}\nTimes: ${
                             o.times
-                        }\n`,
+                        }\n`
                 )
-                .join("\n"),
+                .join("\n")
         );
     }
 }

@@ -4,7 +4,7 @@ import {
     Interaction,
 } from "https://deno.land/x/discordeno@17.0.1/mod.ts";
 
-import { linksDb } from "../db.ts";
+import { linksDb } from "$db";
 
 import Responder from "../util/responder.ts";
 
