@@ -2,6 +2,8 @@ import { ObjectId } from "npm:mongodb";
 
 import config from "$config";
 
+// TODO: Annotate with JSDoc annotations
+
 interface UserFilter {
     guildId: string;
     userId: string;
@@ -27,6 +29,7 @@ interface Links {
     guildId: string;
     cat: string;
     link: string;
+    issuedBy: string;
 }
 
 interface Limit {
