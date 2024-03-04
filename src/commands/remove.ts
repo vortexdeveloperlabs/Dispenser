@@ -2,7 +2,7 @@ import { ApplicationCommandTypes, Bot, Interaction } from "discordeno";
 
 import { linksDb } from "$db";
 
-import Responder from "../util/responder.ts";
+import Responder from "../util/Responder.ts";
 
 const data = {
     name: "remove",
@@ -25,7 +25,7 @@ const data = {
     dmPermission: false,
 };
 
-async function handle(bot: Bot, interaction: Interaction) {
+async function handle(bot: Bot, interaction: Interaction, isAdmin: boolean) {
     const responder = new Responder(bot, interaction.id, interaction.token);
 
     const guildId = String(interaction.guildId);
@@ -34,22 +34,40 @@ async function handle(bot: Bot, interaction: Interaction) {
     const link = interaction.data?.options?.[1]?.value;
 
     if (!link) {
-        await linksDb.deleteMany({
-            guildId: guildId,
-            cat: cat,
-        });
+        if (isAdmin) {
+            await linksDb.deleteMany({
+                guildId: guildId,
+                cat: cat,
+            });
 
-        return await responder.respond(`Removed the category ${cat}`);
+            return await responder.respond(`Removed the category ${cat}`);
+        } else {
+            await linksDb.deleteMany({
+                guildId: guildId,
+                cat: cat,
+                issuedBy: String(interaction.user.id),
+            });
+
+            return await responder.respond(
+                `Removed your links from the category ${cat}`
+            );
+        }
     } else {
-        await linksDb.deleteMany({
+        // deno-lint-ignore no-explicit-any prefer-const
+        let basicQuery: any = {
             guildId: guildId,
             link: link,
             cat: cat,
-        });
+        };
+        if (isAdmin) basicQuery.issuedBy = String(interaction.user.id);
+
+        if (linksDb.findOne(basicQuery) !== null)
+            await linksDb.deleteMany(basicQuery);
+        else await responder.respond(`${link} does not exist in ${cat}`);
 
         return await responder.respond(`Removed ${link} from ${cat}`);
     }
 }
 
-const adminOnly = true;
+const adminOnly = false;
 export { data, handle, adminOnly };

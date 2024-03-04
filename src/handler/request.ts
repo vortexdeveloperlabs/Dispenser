@@ -1,6 +1,6 @@
 import { Bot, Interaction } from "discordeno";
 
-import getLinks from "../util/links.ts";
+import getLinks from "../util/getLink.ts";
 import Responder from "../util/Responder.ts";
 
 import { catsDb, usersDb, limitsDb, filtersDb } from "$db";
@@ -104,7 +104,7 @@ export default async function (
         )}; having a total of ${times} links`
     );
 
-    const link = await getLinks(guildId, links, filters, cat);
+    const { link, issuedBy } = await getLinks(guildId, links, filters, cat);
 
     if (link instanceof Error) return await responder.respond(link.message);
     else if (typeof link !== "string") {
@@ -141,7 +141,11 @@ export default async function (
                         title: cat,
                         description: `${link}\n${linksLeftMsg("You have ")}`,
                         footer: {
-                            text: `Sent from ${guild.name}`,
+                            text:
+                                `Sent by the Dispenser from ${guild.name}` +
+                                issuedBy
+                                    ? `\nYou are using a community link provided by ${issuedBy}.`
+                                    : "",
                         },
                     },
                 ],

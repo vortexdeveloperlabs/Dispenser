@@ -2,7 +2,7 @@ import { ApplicationCommandTypes, Bot, Interaction } from "discordeno";
 
 import { limitsDb } from "$db";
 
-import Responder from "../util/responder.ts";
+import Responder from "../util/Responder.ts";
 
 const data = {
     name: "limit",

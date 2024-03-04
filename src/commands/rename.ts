@@ -7,7 +7,7 @@ import {
 
 import { catsDb, linksDb } from "$db";
 
-import Responder from "../util/responder.ts";
+import Responder from "../util/Responder.ts";
 
 const data = {
     name: "rename",
@@ -30,7 +30,7 @@ const data = {
     dmPermission: false,
 };
 
-async function handle(bot: Bot, interaction: Interaction) {
+async function handle(bot: Bot, interaction: Interaction, isAdmin: boolean) {
     const responder = new Responder(bot, interaction.id, interaction.token);
 
     const cat1: string = interaction.data?.options?.[0]?.value;
@@ -38,11 +38,16 @@ async function handle(bot: Bot, interaction: Interaction) {
 
     const guildId = String(interaction.guildId);
 
+    // deno-lint-ignore no-explicit-any prefer-const
+    let match: any = {
+        guildId: guildId,
+        cat: cat1,
+    };
+
+    if (isAdmin) match.issuedBy = String(interaction.user.id);
+
     await catsDb.updateMany(
-        {
-            guildId: guildId,
-            cat: cat1,
-        },
+        match,
         {
             $set: {
                 cat: cat2,
@@ -54,10 +59,7 @@ async function handle(bot: Bot, interaction: Interaction) {
     );
 
     await linksDb.updateMany(
-        {
-            guildId: guildId,
-            cat: cat1,
-        },
+        match,
         {
             $set: {
                 cat: cat2,
@@ -71,5 +73,5 @@ async function handle(bot: Bot, interaction: Interaction) {
     responder(`Renamed ${cat1} to ${cat2}`);
 }
 
-const adminOnly = true;
+const adminOnly = false;
 export { data, handle, adminOnly };
