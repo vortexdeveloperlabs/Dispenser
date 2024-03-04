@@ -1,6 +1,6 @@
 import { Bot, Interaction } from "discordeno";
 
-import Responder from "../util/responder.ts";
+import Responder from "../util/Responder.ts";
 
 import { filtersDb } from "$db";
 

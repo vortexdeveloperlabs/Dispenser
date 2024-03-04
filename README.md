@@ -1,6 +1,6 @@
 # Dispenser
 
-You can find the \[V3 branch here](TODO: ...). Dispenser is designed to be used by other Discord servers, so I don't recommend self-hosting, unless you really have a need to.
+You can find the \[V2 branch here](TODO: ...). Dispenser is designed to be used by other Discord servers, so I don't recommend self-hosting, unless you really have a need to.
 
 ## How to use
 

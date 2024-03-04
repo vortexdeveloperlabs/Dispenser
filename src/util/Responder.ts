@@ -5,8 +5,7 @@ import {
     MessageFlags,
 } from "https://deno.land/x/discordeno@13.0.0-rc18/mod.ts";
 
-// Rename respond to response
-export default class {
+export default class Responder {
     bot: Bot;
     id: bigint;
     token: string;
@@ -26,7 +25,7 @@ export default class {
                     content: msg,
                     flags: MessageFlags.Empheral,
                 },
-            },
+            }
         );
     }
     async respondEmbed(embed: Embed) {
@@ -39,7 +38,7 @@ export default class {
                     embeds: [embed],
                     flags: MessageFlags.Empheral,
                 },
-            },
+            }
         );
     }
 }

@@ -2,7 +2,7 @@
 
 This is a system to minimize downtime
 
-Because, the link bot is the most likely crucial part of the proxy community itself and uses a remote database, it makes sense to have fallbacks. The best way to do this would be to host all of the nodes at once and before the interaction in the is served. The command handle itself shouldn't have these checks, but it should be in the command handler (what runs the command handles). My proposed solution involves hosting all of the bots at once, but in the fallback nodes, intercepting the interaction and stopping the command handler from responding if the other nodes of higher importance remain functioning. This allows for redundancy. You can set the nodes in `config.modes`. Don't provide nodes that are above the priority of your node, because that's redundant.
+Because, the link bot is the most likely crucial part of the proxy community itself and uses a remote database, it makes sense to have fallbacks. The best way to do this would be to host all of the nodes at once and before the interaction in the is served. The command handle itself shouldn't have these checks, but it should be in the command handler (what runs the command handles). My proposed solution involves hosting all of the bots at once, but in the fallback nodes, intercepting the interaction and stopping the command handler from responding if the other nodes of higher importance remain functioning. This allows for redundancy. You can set the nodes in `config.modes`. Don't provide nodes that are above the priority of your node, because that's redundant. And because of this, the main node is determined by if there are no fallback nodes set for it.
 
 ## The APIs
 

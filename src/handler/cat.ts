@@ -1,7 +1,7 @@
 import { Bot, Interaction } from "discordeno";
 
-import getLinks from "./links.ts";
-import Responder from "../util/responder.ts";
+import getLinks from "../util/links.ts";
+import Responder from "../util/Responder.ts";
 
 import { catsDb } from "$db";
 

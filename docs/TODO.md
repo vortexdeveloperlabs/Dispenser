@@ -6,6 +6,8 @@
     -   [ ] Make import maps to runtimes other than Node that redirect the imports to NPM to their native alernatives, so they don't have to rely on NodeJS emulation
         -   [ ] Upgrade Discordeno 13 imports to 17, and replace it to the "discordeno" NPM import
     -   [ ] Finish the start scripts for the alternative runtimes
+-   [ ] Implement community links
+-   [ ] Implement link reporting
 -   [ ] Implement [Enchanced logging functionality](./Logging.md):
     -   [ ] Add channel logging
     -   [ ] Colorize the output in the server logs by using a proper logger

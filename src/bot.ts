@@ -12,16 +12,17 @@ import {
     enableCacheSweepers,
 } from "https://deno.land/x/discordeno_cache_plugin@0.0.21/mod.ts";
 
-import filterHandle from "./util/filter.ts";
-import catHandle from "./util/cat.ts";
-import requestHandle from "./util/request.ts";
-import reportHandle from "./util/report.ts";
+import filterHandle from "./handler/filter.ts";
+import catHandle from "./handler/cat.ts";
+import requestHandle from "./handler/request.ts";
+import reportHandle from "./handler/report.ts";
 
-import Responder from "./util/responder.ts";
+import Responder from "./util/Responder.ts";
 
 import isAdmin from "./util/isAdmin.ts";
 
 import { faultToleranceDb } from "$db";
+import runCommand from "./runCommand.ts";
 
 const commands = new Collection();
 
@@ -58,37 +59,21 @@ export default async function initBot(
 
                         const commandName = command.data.name;
 
-                        if (
-                            command?.adminOnly &&
-                            !(await isAdmin(
-                                interaction.member,
-                                String(interaction.guildId)
-                            ))
-                        ) {
+                        const isAdmin = await isAdmin(
+                            interaction.member,
+                            String(interaction.guildId)
+                        );
+
+                        if (command?.adminOnly && !isAdmin) {
                             console.error(
-                                `${interaction.user.username} tried to run ${command.data.name} without permission`
+                                `${interaction.user.username} tried to run ${commandName} without permission`
                             );
                             return await responder.respond(
                                 "You don't have permission to run this command!"
                             );
                         }
 
-                        try {
-                            await command?.handle(bot, interaction);
-
-                            faultToleranceDb.deleteMany({
-                                commandName,
-                            });
-                        } catch (err) {
-                            const errFmt = `Error running ${command.data.name}: ${err.stack}`;
-                            if (isDebug) throw new Error(errFmt);
-                            else console.error(errFmt);
-
-                            await faultToleranceDb.insertOne({
-                                commandName,
-                                error: err.message,
-                            });
-                        }
+                        runCommand(bot, interaction, command, isAdmin);
                     } else if (
                         interaction.type === InteractionTypes.MessageComponent
                     ) {

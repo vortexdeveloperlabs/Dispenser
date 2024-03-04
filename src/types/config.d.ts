@@ -25,8 +25,8 @@ type BotConfig = {
     guildId: DiscordID;
 };
 
-declare namespace ConfigTypes {
-    export interface config {
+declare module "ConfigTypes" {
+    export interface Config {
         bot: BotConfig;
         // This is useful if you have a bot for testing, so you can experiment without affecting your users.
         devBot?: BotConfig;

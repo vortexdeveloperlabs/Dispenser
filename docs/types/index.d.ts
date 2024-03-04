@@ -7,9 +7,8 @@ declare module "FaultTolerance" {
         nodes: Node[];
     }
 
-    type IsCommandWorkingStatus = "true" | "false";
     export interface IsCommandWorkingResponse {
-        status: IsCommandWorkingStatus;
+        working: "true" | "false";
         /** This should only be present if status is false */
         error?: string;
     }
