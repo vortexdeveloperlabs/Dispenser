@@ -7,7 +7,8 @@ import { serve } from "@hono/node-server";
 
 import config from "$config";
 
-initBot(config.bot.token, config.bot.id);
+if (config.isDebug) initBot(config.bot.token, config.bot.id);
+else initBot(config.devBot.token, config.devBot.id);
 
 if (config.nodes)
     serve({

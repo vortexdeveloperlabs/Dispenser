@@ -1,6 +1,7 @@
 import { ObjectId } from "npm:mongodb";
 
 import config from "$config";
+import { Database } from "https://deno.land/x/atlas_sdk@v1.1.2/client.ts";
 
 // TODO: Annotate with JSDoc annotations
 
@@ -60,7 +61,9 @@ interface FaultToleranceAPI {
     }[];
 }
 
-const db = config.mongoClient.db("bot");
+let db: Database;
+if (config.isDebug) db = config.devBot.mongoClient.db("bot");
+else db = config.bot.mongoClient.db("bot");
 
 const filtersDb = db.collection<UserFilter>("filter");
 const catsDb = db.collection<UserCategory>("cat");
