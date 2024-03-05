@@ -1,0 +1,3 @@
+## How the community links will be distributed - Propposal
+
+The community link distributor (a regular server member who hosts community links) will be able to choose how their links are given out. They could either be distributed as a fallback (which means the community links would be given assuming that all of the official links are exhausted for the cohort, in a separate pool, or both. The user would have to opt into getting community pooled links in the onboarding process. What I mean by a separate pool is that everyone in your cohort that is subscribed to the community link pooling will be given twice the amount of fresh links they get normally.
