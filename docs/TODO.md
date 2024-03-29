@@ -1,6 +1,6 @@
 # TODOs
 
-# Last changes before the V2 update
+## Last changes before the V2 update
 
 -   [ ] Refactor the command handler to allow commands to be registered as a subcommand so `/link add` can be its own file itself, for example.
     -   [ ] Combine all of the link commands into subcommands on `/link <subcommand> ...`
@@ -10,6 +10,8 @@
         -   [x] MongoDB imports
         -   [ ] Upgrade Discordeno 13 imports to 17, and replace it to the "discordeno" NPM import
     -   [ ] Finish the start scripts for the alternative runtimes
+-   [ ] Make it so that you can use /list <category>
+    -   [ ] Also, list the limit for the category
 -   [ ] Allow a "link manager" role to be assigned that allows for users other than admins to be able to control Dispenser.
 -   [ ] Implement community links
     -   [x] Give community members access to the link management commands
@@ -28,15 +30,24 @@
     -   [ ] Colorize the output in the server logs by using a proper logger
 -   [x] Implement [fault tolerance](./Fault%20tolerance.md):
     -   [x] Implement it in the bot itself
-    -   [x] Implement the APIs
+    -   [x] Implement the API
+            I'm also going to make it so that you can sync yourself for roles related to the filters / classroom providers
 
-# V3 updates
+## Cohorts
 
--   [ ] Global links - [ ] `/carousel` - This will be a paginator for subscribing to categories from servers outside of the one you are in.
-        `btn:invite | select:category | btn: subscribe | btn:double-left (go to the most popular server) | btn:left | btn:right | btn:dice (randomly choose a category)`.
+-   [ ] Implement the [Cohort System](./Cohorts.md)
+-   [ ] Panel updates
+    -   [ ] Support multiple "Classroom Providers" by making it so that there is a dropdown to select yours on the panel if you have district cohorts and account checking enabled.
+    -   [ ] Whenever the user clicks on the dispense button they would be given a notice / recommendation to identify themselves with a District cohort through an empheral message reply. In auto mode (v3), the user would be given a notice the first time they activate it. This would be able to be opted out with `/opt-out district_cohorts_reminder` (with autocomplete ofc).
+
+## V3 updates
+
+-   [ ] Global links
+    -   [ ] `/carousel` - This will be a paginator for subscribing to categories from servers outside of the one you are in.
+            `btn:invite | select:category | btn: subscribe | btn:double-left (go to the most popular server) | btn:left | btn:right | btn:dice (randomly choose a category)`.
 -   [ ] Global link button. When global link support is enabled `config.globalLinks.enabled` (enabled by default), the panel will have an extra button called "🌐 Global" This will respond with an ephemeral message that is similar to the panel, but only shows global servers and categories that the user is subscribed to. `drop-down:server name | drop-down:category | btn:submit`
 -   [ ] Implement auto link distribution
 
-## Documentation
+### Documentation
 
 -   [ ] Explain how to make and use a systemd service for Dispenser - Flyaway
