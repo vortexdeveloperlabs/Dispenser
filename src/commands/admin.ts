@@ -18,7 +18,7 @@ const data = {
             type: ApplicationCommandOptionTypes.Role,
             name: "role",
             description: "The role that gets the status",
-            required: false,
+            required: true,
         },
     ],
     dmPermission: false,
