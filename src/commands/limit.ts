@@ -38,26 +38,35 @@ async function handle(bot: Bot, interaction: Interaction): Promise<void> {
     const cat = interaction.data?.options?.[2]?.value;
     const premiumLimit = interaction.data?.options?.[3]?.value;
 
-    await limitsDb.updateMany(
-        {
-            guildId: String(interaction.guildId),
-            cat: cat,
-        },
-        {
-            $set: {
-                limit: Number(limit),
-                premiumLimit: Number(premiumLimit),
+    // Check if limit and premium limit is a number
+    if (isNaN(Number(limit)) || isNaN(Number(premiumLimit)) {
+        await responder.respond("The limit must be a number!");
+        return;
+    } else if (Number(limit) < 0 || Number(premiumLimit) < 0) {
+        await responder.respond("The limit must be a positive number!");
+        return;
+    } else {
+        await limitsDb.updateMany(
+            {
+                guildId: String(interaction.guildId),
+                cat: cat,
             },
-        },
-        {
-            upsert: true,
-        }
-    );
+            {
+                $set: {
+                    limit: Number(limit),
+                    premiumLimit: Number(premiumLimit),
+                },
+            },
+            {
+                upsert: true,
+            }
+        );
 
-    await responder.respond(
-        `Set the limit to ${limit}` +
-            (premiumLimit ? `and the premium limit to ${premiumLimit}!` : "!")
-    );
+        await responder.respond(
+            `Set the limit to ${limit}` +
+                (!isNaN(premiumLimit) && premiumLimit !== undefined ? `and the premium limit to ${premiumLimit}!` : "!")
+        );
+    }
 }
 
 const adminOnly = true;
