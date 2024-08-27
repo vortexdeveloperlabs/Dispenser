@@ -1,8 +1,12 @@
 {
-    "imports": {
-        "$config": "./config.ts",
-        "$db": "./src/db.ts",
-        "discordeno": "https://deno.land/x/discordeno@17.0.1/mod.ts",
-        "keyv-mongodb": "npm:keyv-mongodb"
-    }
+	"imports": {
+		"$config": "./config.ts",
+		"$db": "./src/db.ts",
+		"discordeno": "https://deno.land/x/discordeno@17.0.1/mod.ts",
+		"keyv-mongodb": "npm:keyv-mongodb"
+	},
+	"fmt": {
+		"indentWidth": 4,
+		"useTabs": true
+	}
 }

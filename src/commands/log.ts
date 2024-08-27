@@ -1,36 +1,36 @@
 import {
-    ApplicationCommandOptionTypes,
-    ApplicationCommandTypes,
-    Bot,
-    Interaction,
+	ApplicationCommandOptionTypes,
+	ApplicationCommandTypes,
+	Bot,
+	Interaction,
 } from "discordeno";
 
-import { chansDb } from "$db";
+//import { chansDb } from "$db";
 
 import Responder from "../util/responder.ts";
 
 const data = {
-    name: "logs",
-    description: "Sets the channel for bot logs",
-    type: ApplicationCommandTypes.ChatInput,
-    options: [
-        {
-            type: ApplicationCommandOptionTypes.Channel,
-            name: "channel",
-            description: "The channel to log to",
-            required: true,
-        },
-    ],
-    dmPermission: false,
+	name: "logs",
+	description: "Sets the channel for bot logs",
+	type: ApplicationCommandTypes.ChatInput,
+	options: [
+		{
+			type: ApplicationCommandOptionTypes.Channel,
+			name: "channel",
+			description: "The channel to log to",
+			required: true,
+		},
+	],
+	dmPermission: false,
 };
 
 async function handle(bot: Bot, interaction: Interaction) {
-    const responder = new Responder(bot, interaction.id, interaction.token);
+	const responder = new Responder(bot, interaction.id, interaction.token);
 
-    const chan = interaction.data?.options?.[0]?.value;
+	const chan = interaction.data?.options?.[0]?.value;
 
-    await responder.respond(`The channel is ${chan}`);
+	await responder.respond(`The channel is ${chan}`);
 }
 
 const adminOnly = true;
-export { data, handle, adminOnly };
+export { adminOnly, data, handle };

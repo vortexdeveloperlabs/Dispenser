@@ -5,15 +5,17 @@ import { validatePermissions } from "https://deno.land/x/discordeno@17.0.1/plugi
 import { rolesDb } from "$db";
 
 export default async (member: Member, guildId: string): Promise<boolean> => {
-    if (validatePermissions(member.permissions || BigInt(0), ["ADMINISTRATOR"]))
-        return true;
+	if (
+		validatePermissions(member.permissions || BigInt(0), ["ADMINISTRATOR"])
+	) {
+		return true;
+	}
 
-    const { admin } =
-        (await rolesDb.findOne({
-            guildId: guildId,
-        })) || {};
+	const { admin } = (await rolesDb.findOne({
+		guildId: guildId,
+	})) || {};
 
-    if (!admin) return false;
+	if (!admin) return false;
 
-    return member.roles.includes(BigInt(admin));
+	return member.roles.includes(BigInt(admin));
 };

@@ -3,58 +3,58 @@ import { ObjectId } from "npm:mongodb";
 import config from "$config";
 
 interface UserFilter {
-    guildId: string;
-    userId: string;
-    filters: Array<string>;
+	guildId: string;
+	userId: string;
+	filters: Array<string>;
 }
 
 interface UserCategory {
-    guildId: string;
-    userId: string;
-    cat: string;
+	guildId: string;
+	userId: string;
+	cat: string;
 }
 
 interface Users {
-    _id: ObjectId;
-    guildId: string;
-    userId: string;
-    cat: string;
-    links: Array<string>;
-    times: number;
+	_id: ObjectId;
+	guildId: string;
+	userId: string;
+	cat: string;
+	links: Array<string>;
+	times: number;
 }
 
 interface Links {
-    guildId: string;
-    cat: string;
-    link: string;
+	guildId: string;
+	cat: string;
+	link: string;
 }
 
 interface Limit {
-    guildId: string;
-    cat: string;
-    limit: number;
-    premiumLimit: number;
+	guildId: string;
+	cat: string;
+	limit: number;
+	premiumLimit: number;
 }
 
 interface Roles {
-    guildId: string;
-    admin: string;
-    premium: string;
+	guildId: string;
+	admin: string;
+	premium: string;
 }
 
 interface LogChannels {
-    guildId: string;
-    id: string;
+	guildId: string;
+	id: string;
 }
 
 interface FaultToleranceAPI {
-    // The key
-    nodeHost: string;
-    // The value
-    brokenCommands: {
-        commandName: string;
-        errorMessage?: string;
-    }[];
+	// The key
+	nodeHost: string;
+	// The value
+	brokenCommands: {
+		commandName: string;
+		errorMessage?: string;
+	}[];
 }
 
 const db = config.mongoClient.db("bot");
@@ -70,12 +70,12 @@ const chansDb = db.collection<LogChannels>("chans");
 const faultToleranceDb = db.collection<FaultToleranceAPI>("faultToleranceAPI");
 
 export {
-    catsDb,
-    filtersDb,
-    usersDb,
-    linksDb,
-    limitsDb,
-    rolesDb,
-    chansDb,
-    faultToleranceDb,
+	catsDb,
+	chansDb,
+	faultToleranceDb,
+	filtersDb,
+	limitsDb,
+	linksDb,
+	rolesDb,
+	usersDb,
 };

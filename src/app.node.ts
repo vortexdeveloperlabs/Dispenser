@@ -9,8 +9,9 @@ import config from "$config";
 
 initBot(config.bot.token, config.bot.id);
 
-if (config.nodes)
-    serve({
-        fetch: faultTolerantAPI,
-        port: config.port,
-    });
+if (config.nodes) {
+	serve({
+		fetch: faultTolerantAPI,
+		port: config.port,
+	});
+}

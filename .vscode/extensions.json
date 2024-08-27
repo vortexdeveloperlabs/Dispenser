@@ -1,4 +1,4 @@
 {
-    /* TODO: Replace with Bun and Bun format */
-    "recommendations": ["denoland.vscode-deno", "esbenp.prettier-vscode"]
+	/* TODO: Replace with Bun and Bun format */
+	"recommendations": ["denoland.vscode-deno", "esbenp.prettier-vscode"]
 }

@@ -8,6 +8,6 @@ initBot(config.bot.token, config.bot.id);
 export default faultTolerantAPI(config.port);
 
 export default {
-    port: config.port,
-    fetch: faultTolerantAPI,
+	port: config.port,
+	fetch: faultTolerantAPI,
 };

@@ -1,28 +1,28 @@
 {
-    "dependencies": {
-        "keyv-mongodb": "^3.0.0"
-    },
-    "name": "dispenser",
-    "version": "1.0.0",
-    "main": "npx tsc src/app.node.js",
-    "directories": {
-        "doc": "docs"
-    },
-    "imports": {
-        "$db": "./src/db.ts"
-    },
-    "devDependencies": {},
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/VyperGroup/Dispenser.git"
-    },
-    "author": "Ryan Wilson",
-    "license": "AGPL-3.0-or-later",
-    "bugs": {
-        "url": "https://github.com/VyperGroup/Dispenser/issues"
-    },
-    "homepage": "https://github.com/VyperGroup/Dispenser#readme"
+	"dependencies": {
+		"keyv-mongodb": "^3.0.0"
+	},
+	"name": "dispenser",
+	"version": "1.0.0",
+	"main": "npx tsc src/app.node.js",
+	"directories": {
+		"doc": "docs"
+	},
+	"imports": {
+		"$db": "./src/db.ts"
+	},
+	"devDependencies": {},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/VyperGroup/Dispenser.git"
+	},
+	"author": "Ryan Wilson",
+	"license": "AGPL-3.0-or-later",
+	"bugs": {
+		"url": "https://github.com/VyperGroup/Dispenser/issues"
+	},
+	"homepage": "https://github.com/VyperGroup/Dispenser#readme"
 }
