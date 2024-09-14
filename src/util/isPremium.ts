@@ -1,12 +1,13 @@
-import { Member } from "https://deno.land/x/discordeno@13.0.0-rc45/mod.ts";
-import { rolesDb } from "$db";
+import { Member } from "discordeno";
+
+import { rolesDb, ServerRoleData } from "$db";
 
 export default async (member: Member, guildId: string) => {
-	const { premium } = (await rolesDb.findOne({
+	const { premium: premiumRoleId }: ServerRoleData = (await rolesDb.findOne({
 		guildId: guildId,
 	})) || {};
 
-	if (!premium) return false;
+	if (!premiumRoleId) return false;
 
-	return member.roles.includes(BigInt(premium));
+	return member.roles.includes(BigInt(premiumRoleId));
 };

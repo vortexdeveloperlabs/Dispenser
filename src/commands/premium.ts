@@ -1,15 +1,20 @@
+import { Bot, Interaction } from "npm:@discordeno/bot";
 import {
 	ApplicationCommandOptionTypes,
 	ApplicationCommandTypes,
-	Bot,
-	Interaction,
-} from "discordeno";
+	CreateSlashApplicationCommand,
+} from "npm:@discordeno/types";
 
 import { rolesDb } from "$db";
 
 import Responder from "../util/responder.ts";
 
-const data = {
+import { CommandConfig } from "../types/commands.d.ts";
+
+import { accessConfig } from "../util/AccessConfig.ts";
+import { getUserLocale } from "../util/getIfExists.ts";
+
+const data: CreateSlashApplicationCommand = {
 	name: "premium",
 	description: "Give premium perms to a role",
 	type: ApplicationCommandTypes.ChatInput,
@@ -18,13 +23,15 @@ const data = {
 			type: ApplicationCommandOptionTypes.Role,
 			name: "role",
 			description: "The role that gets the perms",
-			required: false,
 		},
 	],
-	dmPermission: false,
 };
 
-async function handle(bot: Bot, interaction: Interaction) {
+const commandConfig: CommandConfig = {
+	managementOnly: true,
+};
+
+async function handle(bot: Bot, interaction: Interaction): Promise<void> {
 	const responder = new Responder(bot, interaction.id, interaction.token);
 
 	const guildId = String(interaction.guildId);
@@ -45,8 +52,16 @@ async function handle(bot: Bot, interaction: Interaction) {
 		},
 	);
 
-	return await responder.respond(`Gave premium status to ${roleId}`);
+	return await responder.respond(
+		`${
+			accessConfig.getTranslation({
+				type: "in_command",
+				searchString: "Gave premium status to",
+				commandTarget: "premium",
+				isEmbed: false,
+			}, getUserLocale(interaction.user))
+		} ${roleId}`,
+	);
 }
 
-const adminOnly = true;
-export { adminOnly, data, handle };
+export { commandConfig, data, handle };

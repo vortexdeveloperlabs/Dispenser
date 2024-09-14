@@ -13,7 +13,8 @@
 	},
 	"devDependencies": {},
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"start": "deno run --allow-read --allow-net --allow-sys --allow-env src/app.ts",
+		"fmt": "deno fmt"
 	},
 	"repository": {
 		"type": "git",

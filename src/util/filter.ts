@@ -4,7 +4,14 @@ import Responder from "../util/responder.ts";
 
 import { filtersDb } from "$db";
 
-export default async function (bot: Bot, interaction: Interaction) {
+import { accessConfig } from "./AccessConfig.ts";
+
+import { logger } from "./Logger.ts";
+
+export default async function (
+	bot: Bot,
+	interaction: Interaction,
+): Promise<void> {
 	const responder = new Responder(bot, interaction.id, interaction.token);
 
 	const guildId = String(interaction.guildId);
@@ -15,7 +22,7 @@ export default async function (bot: Bot, interaction: Interaction) {
 	const filters = interaction?.data?.values;
 
 	if (filters) {
-		console.log(`${name} now uses ${filters?.join(", ")}`);
+		logger.log(`${name} now uses ${filters?.join(", ")}`);
 
 		await filtersDb.updateMany(
 			{
@@ -32,6 +39,13 @@ export default async function (bot: Bot, interaction: Interaction) {
 			},
 		);
 
-		return await responder.respond("Updated ✅");
+		await responder.respond(
+			await accessConfig.getTranslation({
+				type: "misc_string",
+				searchString: "Filters updated",
+			}) + (await accessConfig.getConfig()).successIndicator,
+		);
+
+		return;
 	}
 }

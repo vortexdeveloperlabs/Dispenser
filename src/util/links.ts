@@ -1,6 +1,6 @@
-import blocked from "./checker/ls.ts";
+import blockedOnLS from "./checker/ls.ts";
 
-import { linksDb } from "$db";
+import { Link, linksDb } from "$db";
 
 const noLinksMessage = (filter: string): string =>
 	`There are no links unblocked for ${filter}`;
@@ -15,7 +15,8 @@ export default async (
 		guildId: guildId,
 		cat: cat,
 	});
-	const links = await cursor.toArray();
+	const links: Link[] = await cursor.toArray();
+
 	if (links.length === 0) return "There are no links!";
 
 	let filteredLinks: Array<string> = [];
@@ -34,7 +35,7 @@ export default async (
 
 	if (filters.includes("ls")) {
 		unblockedList = unblockedList.filter(async (link) =>
-			await !blocked(link)
+			await !blockedOnLS(link)
 		);
 
 		/*

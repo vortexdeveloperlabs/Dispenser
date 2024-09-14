@@ -1,35 +1,52 @@
-import { ApplicationCommandTypes, Bot, Interaction } from "discordeno";
+import { Bot, Interaction } from "npm:@discordeno/bot";
+import {
+	ApplicationCommandOptionTypes,
+	ApplicationCommandTypes,
+	CreateSlashApplicationCommand,
+} from "npm:@discordeno/types";
+
+import { CommandConfig } from "../types/commands.d.ts";
 
 import { limitsDb } from "$db";
 
 import Responder from "../util/responder.ts";
 
-const data = {
+import autocompleteHandleCategoryOnly from "../util/autocompleteHandleCategoryOnly.ts";
+
+const data: CreateSlashApplicationCommand = {
 	name: "limit",
 	description: "Sets the monthly limit for a category",
 	type: ApplicationCommandTypes.ChatInput,
 	options: [
 		{
-			type: ApplicationCommandTypes.Message,
+			type: ApplicationCommandOptionTypes.Number,
 			name: "limit",
 			description: "The limit",
 			required: true,
 		},
 		{
-			type: ApplicationCommandTypes.Message,
-			name: "category",
-			description: "The category",
-			required: true,
-		},
-		{
-			type: ApplicationCommandTypes.Message,
+			type: ApplicationCommandOptionTypes.Number,
 			name: "premiumlimit",
 			description: "The limit for premium users",
-			required: false,
+		},
+		{
+			type: ApplicationCommandOptionTypes.String,
+			name: "category",
+			description:
+				"The category. The autocomplete will suggest already created categories; however, you may put a new one to create a new one.",
+			autocomplete: true,
+			required: true,
 		},
 	],
 	dmPermission: false,
 };
+
+const commandConfig: CommandConfig = {
+	managementOnly: true,
+};
+
+const autocompleteHandle = (interaction: Interaction) =>
+	autocompleteHandleCategoryOnly(interaction, data);
 
 async function handle(bot: Bot, interaction: Interaction): Promise<void> {
 	const responder = new Responder(bot, interaction.id, interaction.token);
@@ -45,8 +62,8 @@ async function handle(bot: Bot, interaction: Interaction): Promise<void> {
 		},
 		{
 			$set: {
-				limit: Number(limit),
-				premiumLimit: Number(premiumLimit),
+				limit,
+				premiumLimit,
 			},
 		},
 		{
@@ -60,5 +77,4 @@ async function handle(bot: Bot, interaction: Interaction): Promise<void> {
 	);
 }
 
-const adminOnly = true;
-export { adminOnly, data, handle };
+export { autocompleteHandle, commandConfig, data, handle };
