@@ -17,6 +17,28 @@ export interface Cohort {
 	createdAt: number;
 }
 
+/* The filters the user has are collected in the corresponding cohorts created with the onboarding process, so they don't need to be here */
+export interface CrowdsourceReport {
+	relevantCohorts: Cohort[];
+	/* The snowflake ID of the user who submitted it */
+	by: string;
+	chromePolicy?: string;
+	/* This is only offered if they choose to not provide the policy (chrome://policy may also be blocked) */
+	filteringExtURLs?: string[];
+	appleMobileconfig?: string;
+	blockpageURLs?: string[];
+	forcedDNSServers?: string[];
+	forcedDoHServers?: string[];
+	created: {
+		// The Discord snowflake ID of whoever  created the link
+		by: string;
+		// This should be a UNIX timestamp
+		at: string;
+	};
+	// The UNIX timestamp of when the report was last modified
+	lastModified: string;
+}
+
 export type PremiumLevel = {
 	_id: ObjectId;
 	guildId: string;
@@ -78,7 +100,7 @@ export interface LinkData {
 	link: string;
 	supportedPremiumLevels: string[];
 	created: {
-		// The Discord snowflake ID of whoever  created the link
+		// The Discord snowflake ID of whoever created the link
 		by: string;
 		// This should be a UNIX timestamp
 		at: string;
