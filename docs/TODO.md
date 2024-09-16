@@ -1,12 +1,14 @@
 # TODOs
 
-# Last changes before V1.2 updated
+- [ ] Add message splitting to Responder.respond (see what I said as a comment
+      in PR #3)
+- [ ] Force the user to accept the TOS and PP before they can use any
+      interaction. There will be three buttons on an embed
+      `Read Privacy Policy`, `Read Terms of Service`, and `Accept`. When you
+      click on the former buttons it will display those respective documents.
 
-- [ ] Support translations for every string
-  - [ ] In config js, parse every script in src, get all the searchStrings,
-        upload the searchStrings to tolgee if they aren't already on there, and
-        get the translations to put them in the object map for locale strings
-- [ ] Use Discordeno from NPM
+- [x] Support translations for every string
+- [x] Use Discordeno from NPM
 - [ ] Finish the start scripts for the alternative runtimes
 - [ ] Implement [Enchanced logging functionality](./Logging.md):
   - [ ] Add channel logging
