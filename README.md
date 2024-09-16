@@ -1,9 +1,10 @@
 # Dispenser
 
-Dispenser is designed to be used by other Discord servers, so I don't recommend self-hosting, unless you really
-have a need to.
+Dispenser is designed to be used by other Discord servers, so I don't recommend
+self-hosting, unless you really have a need to.
 
 # FAQ
+
 ## How to use
 
 The Node and Bun versions don't function yet, so use Deno. Dispenser will be
