@@ -48,5 +48,11 @@
 		"**/*.yaml": false,
 		"**/Makefile": false,
 		"**/*.sh": false
+	},
+	"explorer.excludeGitIgnore": false,
+	"editor.formatOnSave": true,
+	"editor.formatOnPaste": false,
+	"[typescript]": {
+		"editor.defaultFormatter": "denoland.vscode-deno"
 	}
 }

@@ -1,13 +1,19 @@
+import { Bot, Interaction } from "npm:@discordeno/bot";
 import {
 	ApplicationCommandOptionTypes,
 	ApplicationCommandTypes,
-	Bot,
-	Interaction,
-} from "discordeno";
+} from "npm:@discordeno/types";
 
 //import { chansDb } from "$db";
 
 import Responder from "../util/responder.ts";
+
+import { CommandConfig } from "../types/commands.d.ts";
+
+import { accessConfig } from "../util/AccessConfig.ts";
+import { getUserLocale } from "../util/getIfExists.ts";
+
+// TODO: Be able to set a channel in another guild. This would be useful because some servers have specific private "staff servers".
 
 const data = {
 	name: "logs",
@@ -24,13 +30,23 @@ const data = {
 	dmPermission: false,
 };
 
-async function handle(bot: Bot, interaction: Interaction) {
+const commandConfig: CommandConfig = {
+	managementOnly: true,
+};
+
+async function handle(bot: Bot, interaction: Interaction): Promise<void> {
 	const responder = new Responder(bot, interaction.id, interaction.token);
 
 	const chan = interaction.data?.options?.[0]?.value;
 
-	await responder.respond(`The channel is ${chan}`);
+	await responder.respond(`${await accessConfig.getTranslation({
+		type: "in_command",
+		searchString: "The channel is set to",
+		commandTarget: "log",
+		isEmbed: false,
+	}, getUserLocale(interaction.user))} ${chan}`);
+
+	// TODO: Implement this
 }
 
-const adminOnly = true;
-export { adminOnly, data, handle };
+export { commandConfig, data, handle };

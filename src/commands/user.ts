@@ -1,15 +1,17 @@
+import { Bot, Interaction } from "npm:@discordeno/bot";
 import {
 	ApplicationCommandOptionTypes,
 	ApplicationCommandTypes,
-	Bot,
-	Interaction,
-} from "discordeno";
+	CreateSlashApplicationCommand,
+} from "npm:@discordeno/types";
 
-import { usersDb } from "$db";
+import { ServerUserData, usersDb } from "$db";
 
 import Responder from "../util/responder.ts";
 
-const data = {
+import { CommandConfig } from "../types/commands.d.ts";
+
+const data: CreateSlashApplicationCommand = {
 	name: "user",
 	description: "Prints the user's info stored on the database",
 	type: ApplicationCommandTypes.ChatInput,
@@ -18,23 +20,25 @@ const data = {
 			type: ApplicationCommandOptionTypes.User,
 			name: "user",
 			description: "The user to query",
-			required: false,
 		},
 		{
-			type: ApplicationCommandTypes.Message,
+			type: ApplicationCommandOptionTypes.String,
 			name: "category",
 			description: "The category to filter from",
-			required: false,
 		},
 	],
 	dmPermission: false,
 };
 
-async function handle(bot: Bot, interaction: Interaction) {
+const commandConfig: CommandConfig = {
+	managementOnly: true,
+};
+
+async function handle(bot: Bot, interaction: Interaction): Promise<void> {
 	const responder = new Responder(bot, interaction.id, interaction.token);
 
 	const userArg = interaction.data?.options?.[0]?.value;
-	const user = (userArg && (await bot.helpers.getUser(userArg))) ||
+	const user = (userArg && (await bot.helpers.getUser(String(userArg)))) ||
 		interaction.user;
 	const userId = userArg || String(user.id);
 
@@ -45,16 +49,16 @@ async function handle(bot: Bot, interaction: Interaction) {
 	}
 
 	if (cat) {
-		const data = await usersDb.findOne({
+		const userData: ServerUserData = await usersDb.findOne({
 			guildId: String(interaction.guildId),
 			userId: userId,
 			cat: cat,
 		});
 
-		if (!data) {
+		if (!userData) {
 			return await responder.respond(
 				`${
-					userId === interaction.user.id
+					userId === String(interaction.user.id)
 						? "You have"
 						: `${user.username} has not`
 				} used the bot`,
@@ -62,17 +66,17 @@ async function handle(bot: Bot, interaction: Interaction) {
 		}
 
 		return await responder.respond(
-			`Links: ${data.links.join(", \n")}\nTimes: ${data.times}`,
+			`Links: ${userData.links.join(", \n")}\nTimes: ${userData.times}`,
 		);
 	} else {
-		const data = await usersDb
+		const userDataList: ServerUserData[] = await usersDb
 			.find({
 				guildId: String(interaction.guildId),
 				userId: userId,
 			})
 			.toArray();
 
-		if (data.length <= 0) {
+		if (userDataList.length <= 0) {
 			return await responder.respond(
 				`${
 					user.id === interaction.user.id
@@ -83,17 +87,16 @@ async function handle(bot: Bot, interaction: Interaction) {
 		}
 
 		return await responder.respond(
-			data
+			userDataList
 				.map(
-					(o) =>
-						`**${o.cat}**\nLinks: ${
-							o.links.join(", ")
-						}\nTimes: ${o.times}\n`,
+					(userData) =>
+						`**${userData.cat}**\nLinks: ${
+							userData.links.join(", ")
+						}\nTimes: ${userData.times}\n`,
 				)
 				.join("\n"),
 		);
 	}
 }
 
-const adminOnly = true;
-export { adminOnly, data, handle };
+export { commandConfig, data, handle };

@@ -2,41 +2,108 @@ import { ObjectId } from "npm:mongodb";
 
 import config from "$config";
 
-interface UserFilter {
+import { PerServerConfig } from "./types/config.d.ts";
+
+export interface Cohort {
+	guildId: string;
+	districtShortname: string;
+	/* The filters encountered in their districts */
+	filters?: string[];
+	/* For managed chromebooks */
+	districtPolicy?: string;
+	/* Object IDs of LinkData */
+	linksRecieved: ObjectId[];
+	/* When the Cohort was first formed */
+	createdAt: number;
+}
+
+export type PremiumLevel = {
+	_id: ObjectId;
+	guildId: string;
+	userIds: string[];
+} | {
+	_id: ObjectId;
+	guildId: string;
+	roleIds: string;
+} | {
+	_id: ObjectId;
+	guildId: string;
+	userIds: string[];
+	roleIds: string;
+};
+
+export interface UserFilter {
 	guildId: string;
 	userId: string;
 	filters: Array<string>;
 }
 
-interface UserCategory {
+export interface UserChosenCategory {
 	guildId: string;
 	userId: string;
 	cat: string;
 }
 
-interface Users {
+export interface GlobalUserData {
 	_id: ObjectId;
 	guildId: string;
+	/* The snowflake ID of the user */
 	userId: string;
-	cat: string;
-	links: Array<string>;
-	times: number;
+	cohortId: ObjectId;
+	hasOnboarded: boolean;
+	hasRecievedOnboarding: boolean;
+	/* If they try to run an interaction for the first, it will tell them that they must read the Privacy Policy and Terms of Service and agree to them with three buttons "I agree", "Terms of Service", and "Privacy Policy." If they do another interaction and they still haven't agreed it will tell them in the first sentence. "You haven't yet agreed to the Terms of Service and Privacy Policy!" */
+	hasRecievedLegalPrompt: boolean;
+	hasAgreedToLegal: boolean;
 }
 
-interface Links {
+export interface ServerUserData {
+	_id: ObjectId;
+	guildId: string;
+	/* The snowflake ID of the user */
+	userId: string;
+	/* The links the user has already recieved */
+	links: Array<string>;
+	/* The amount of time the user has used the links post-reset */
+	times: number;
+	/* Is the user blocked from getting links to the server? */
+	blocked: boolean;
+	/* A list of categories the user is subscribed to */
+	subscriptionList: string[];
+}
+
+export interface LinkData {
 	guildId: string;
 	cat: string;
 	link: string;
+	supportedPremiumLevels: string[];
+	created: {
+		// The Discord snowflake ID of whoever  created the link
+		by: string;
+		// This should be a UNIX timestamp
+		at: string;
+	};
+	lastModified: {
+		// The Discord snowflake ID of whoever last updated the link
+		by: string;
+		// This should be a UNIX timestamp
+		at: string;
+	};
 }
 
-interface Limit {
+interface ServerGuildConfig {
+	guildId: string;
+	config: PerServerConfig;
+}
+
+export interface ServerLimitData {
 	guildId: string;
 	cat: string;
 	limit: number;
 	premiumLimit: number;
 }
 
-interface Roles {
+export interface ServerRoleData {
 	guildId: string;
 	admin: string;
 	premium: string;
@@ -45,6 +112,11 @@ interface Roles {
 interface LogChannels {
 	guildId: string;
 	id: string;
+}
+
+interface PerServerConfigOverrides {
+	guildId: string;
+	config: PerServerConfig;
 }
 
 interface FaultToleranceAPI {
@@ -57,14 +129,17 @@ interface FaultToleranceAPI {
 	}[];
 }
 
-const db = config.mongoClient.db("bot");
+const db = config.mongoClient.db(config.devMode ? "devBot" : "bot");
 
+const perServerConfigOverridesDb = db.collection<PerServerConfig>(
+	"perServerConfigOverrides",
+);
 const filtersDb = db.collection<UserFilter>("filter");
-const catsDb = db.collection<UserCategory>("cat");
-const usersDb = db.collection<Users>("users");
-const linksDb = db.collection<Links>("links");
-const limitsDb = db.collection<Limit>("limit");
-const rolesDb = db.collection<Roles>("roles");
+const catsDb = db.collection<UserChosenCategory>("cat");
+const usersDb = db.collection<ServerUserData>("users");
+const linksDb = db.collection<Link>("links");
+const limitsDb = db.collection<ServerLimitData>("limit");
+const rolesDb = db.collection<ServerRoleData>("roles");
 const chansDb = db.collection<LogChannels>("chans");
 
 const faultToleranceDb = db.collection<FaultToleranceAPI>("faultToleranceAPI");
@@ -76,6 +151,7 @@ export {
 	filtersDb,
 	limitsDb,
 	linksDb,
+	perServerConfigOverridesDb,
 	rolesDb,
 	usersDb,
 };

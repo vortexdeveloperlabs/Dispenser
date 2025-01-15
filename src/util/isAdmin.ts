@@ -2,7 +2,7 @@ import { Member } from "discordeno";
 
 import { validatePermissions } from "https://deno.land/x/discordeno@17.0.1/plugins/mod.ts";
 
-import { rolesDb } from "$db";
+import { rolesDb, ServerRoleData } from "$db";
 
 export default async (member: Member, guildId: string): Promise<boolean> => {
 	if (
@@ -11,11 +11,11 @@ export default async (member: Member, guildId: string): Promise<boolean> => {
 		return true;
 	}
 
-	const { admin } = (await rolesDb.findOne({
+	const { admin: adminRoleId }: ServerRoleData = (await rolesDb.findOne({
 		guildId: guildId,
 	})) || {};
 
-	if (!admin) return false;
+	if (!adminRoleId) return false;
 
-	return member.roles.includes(BigInt(admin));
+	return member.roles.includes(BigInt(adminRoleId));
 };

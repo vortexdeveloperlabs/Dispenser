@@ -1,15 +1,19 @@
+import { Bot, Interaction } from "npm:@discordeno/bot";
 import {
 	ApplicationCommandOptionTypes,
 	ApplicationCommandTypes,
-	Bot,
-	Interaction,
-} from "discordeno";
+	CreateSlashApplicationCommand,
+} from "npm:@discordeno/types";
 
 import { usersDb } from "$db";
 
 import Responder from "../util/responder.ts";
 
-const data = {
+import { CommandConfig } from "../types/commands.d.ts";
+
+import autocompleteHandleCategoryOnly from "../util/autocompleteHandleCategoryOnly.ts";
+
+const data: CreateSlashApplicationCommand = {
 	name: "reset",
 	description: "Resets a user's proxy limit",
 	type: ApplicationCommandTypes.ChatInput,
@@ -21,20 +25,28 @@ const data = {
 			required: true,
 		},
 		{
-			type: ApplicationCommandTypes.Message,
+			type: ApplicationCommandOptionTypes.String,
 			name: "category",
 			description: "The category to get the links from",
-			required: false,
+			autocomplete: true,
 		},
 	],
 	dmPermission: false,
 };
 
-async function handle(bot: Bot, interaction: Interaction) {
+const commandConfig: CommandConfig = {
+	managementOnly: true,
+};
+
+const autocompleteHandle = autocompleteHandleCategoryOnly;
+
+async function handle(bot: Bot, interaction: Interaction): Promise<void> {
 	const responder = new Responder(bot, interaction.id, interaction.token);
 
 	const user = interaction.data?.options?.[0]?.value;
-	const cat: string | undefined = interaction.data?.options?.[1]?.value;
+	const cat: string | undefined = String(
+		interaction.data?.options?.[1]?.value,
+	);
 
 	const filter: {
 		guildId: string;
@@ -42,7 +54,7 @@ async function handle(bot: Bot, interaction: Interaction) {
 		cat?: string;
 	} = {
 		guildId: String(interaction.guildId),
-		userId: user,
+		userId: String(user),
 	};
 
 	if (cat) filter.cat = cat;
@@ -63,5 +75,4 @@ async function handle(bot: Bot, interaction: Interaction) {
 	return await responder.respond(`Reset ${user}'s proxy limit!`);
 }
 
-const adminOnly = true;
-export { adminOnly, data, handle };
+export { autocompleteHandle, commandConfig, data, handle };

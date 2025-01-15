@@ -1,15 +1,20 @@
+import { Bot, Interaction } from "npm:@discordeno/bot";
 import {
 	ApplicationCommandOptionTypes,
 	ApplicationCommandTypes,
-	Bot,
-	Interaction,
-} from "discordeno";
+	CreateSlashApplicationCommand,
+} from "npm:@discordeno/types";
+
+import { CommandConfig } from "../types/commands.d.ts";
 
 import { rolesDb } from "$db";
 
 import Responder from "../util/responder.ts";
 
-const data = {
+import { getUserLocale } from "../util/getIfExists.ts";
+import { accessConfig } from "../util/AccessConfig.ts";
+
+const data: CreateSlashApplicationCommand = {
 	name: "admin",
 	description: "Give admin status to a role",
 	type: ApplicationCommandTypes.ChatInput,
@@ -22,6 +27,10 @@ const data = {
 		},
 	],
 	dmPermission: false,
+};
+
+const commandConfig: CommandConfig = {
+	managementOnly: true,
 };
 
 async function handle(bot: Bot, interaction: Interaction): Promise<void> {
@@ -45,8 +54,12 @@ async function handle(bot: Bot, interaction: Interaction): Promise<void> {
 		},
 	);
 
-	await responder.respond(`Gave admin status to ${roleId}`);
+	await responder.respond(`${
+		accessConfig.getTranslation({
+			type: "misc_string",
+			searchString: "Gave admin status to",
+		}, getUserLocale(interaction.user))
+	} ${roleId}`);
 }
 
-const adminOnly = true;
-export { adminOnly, data, handle };
+export { commandConfig, data, handle };

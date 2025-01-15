@@ -1,104 +1,127 @@
-import { MessageComponentTypes } from "https://deno.land/x/discordeno@13.0.0-rc18/mod.ts";
+import { Bot, Interaction } from "npm:@discordeno/bot";
 import {
 	ApplicationCommandOptionTypes,
-	ApplicationCommandTypes,
-	Bot,
 	ButtonStyles,
-	Interaction,
+	CreateSlashApplicationCommand,
 	InteractionResponseTypes,
-} from "https://deno.land/x/discordeno@13.0.0-rc45/mod.ts";
+	MessageComponentTypes,
+} from "npm:@discordeno/types";
 
 import { linksDb } from "$db";
 
+import { CommandConfig } from "../types/commands.d.ts";
+
 import Responder from "../util/responder.ts";
 
-const data = {
+import { getUserLocale } from "../util/getIfExists.ts";
+
+import { accessConfig } from "../util/AccessConfig.ts";
+
+// TODO: Instead of retrieving values inside of the panel, look inside of the server `/config`
+// TODO: Support panel updating `/panel update <messageLink>`. TODO: Also make it so that when the user adds the bot they can go use the context and click on apps to update.
+const data: CreateSlashApplicationCommand = {
 	name: "panel",
 	description: "Creates a link selection panel",
 	options: [
+		/*
+		{
+			type: ApplicationCommandOptionTypes.Mentionable,
+			name: "usersWithAccess",
+			description:
+				"This will make the panel only accessible to the users or users with the role provided",
+		},
+		*/
 		{
 			type: ApplicationCommandOptionTypes.Boolean,
 			name: "dm",
 			description:
 				"Message the user the link, rather than an hidden message in this channel",
-			required: false,
 		},
 		{
 			type: ApplicationCommandOptionTypes.Channel,
 			name: "report",
 			description: "The channel to send issues to",
-			required: false,
 		},
 		{
-			type: ApplicationCommandTypes.Message,
+			type: ApplicationCommandOptionTypes.String,
 			name: "cat",
 			description: "Category text",
-			required: false,
 		},
 		{
-			type: ApplicationCommandTypes.Message,
+			type: ApplicationCommandOptionTypes.String,
 			name: "filter",
 			description: "Filter text",
-			required: false,
 		},
 		{
-			type: ApplicationCommandTypes.Message,
+			type: ApplicationCommandOptionTypes.String,
 			name: "title",
 			description: "Title text",
-			required: false,
 		},
 		{
-			type: ApplicationCommandTypes.Message,
+			type: ApplicationCommandOptionTypes.String,
 			name: "footer",
 			description: "Footer text",
-			required: false,
 		},
 		{
-			type: ApplicationCommandTypes.Message,
+			type: ApplicationCommandOptionTypes.String,
 			name: "button",
 			description: "Button text",
-			required: false,
 		},
 		{
-			type: ApplicationCommandTypes.Message,
+			type: ApplicationCommandOptionTypes.String,
 			name: "color",
 			description: "Color",
-			required: false,
 		},
 	],
 	dmPermission: false,
 };
 
-async function handle(bot: Bot, interaction: Interaction) {
+const commandConfig: CommandConfig = {
+	managementOnly: true,
+};
+
+// TODO: Create a config: isUserAllowedToUseNonEmpherals
+
+async function handle(bot: Bot, interaction: Interaction): Promise<void> {
 	const responder = new Responder(bot, interaction.id, interaction.token);
 
+	const userLocale = getUserLocale(interaction.user);
+
+	// TODO: Remove all configuration options and make the server managers use /config
 	const dmUser = interaction.data?.options?.find(
 		(opt) => opt.name === "dm",
 	)?.value;
-	const report = interaction.data?.options?.find(
-		(opt) => opt.name === "report",
-	)?.value;
+	//const report = interaction.data?.options?.find(
+	//(opt) => opt.name === "report",
+	//)?.value;
 	const title =
 		interaction.data?.options?.find((opt) => opt.name === "title")?.value ||
 		"Selection";
-	const catTitle =
-		interaction.data?.options?.find((opt) => opt.name === "cat")?.value ||
-		"Select a proxy site";
-	const filterTitle =
-		interaction.data?.options?.find((opt) => opt.name === "filter")
-			?.value ||
-		"Select your filters";
-	const footer =
-		interaction.data?.options?.find((opt) => opt.name === "footer")
-			?.value ||
-		"Hosted by Vyper Group";
-	const button =
-		interaction.data?.options?.find((opt) => opt.name === "button")
-			?.value ||
-		"Request";
-	const color =
-		interaction.data?.options?.find((opt) => opt.name === "color")?.value ||
-		"e071ac";
+	const catTitle = await accessConfig.getTranslation({
+		type: "in_command",
+		searchString: "Select a proxy site",
+		commandTarget: "panel",
+		isEmbed: true,
+	}, userLocale);
+	const filterTitle = await accessConfig.getTranslation({
+		type: "in_command",
+		searchString: "Select your filters",
+		commandTarget: "panel",
+		isEmbed: true,
+	}, userLocale);
+	const footer = await accessConfig.getTranslation({
+		type: "in_command",
+		searchString: "Hosted by Vyper Group",
+		commandTarget: "panel",
+		isEmbed: true,
+	}, userLocale);
+	const button = await accessConfig.getTranslation({
+		type: "in_command",
+		searchString: "Request",
+		commandTarget: "panel",
+		isEmbed: true,
+	}, userLocale);
+	const color = "e071ac";
 
 	const links = await linksDb
 		.find({
@@ -117,7 +140,10 @@ async function handle(bot: Bot, interaction: Interaction) {
 	];
 
 	if (cats.length === 0) {
-		return await responder.respond("There are no links!");
+		await responder.respond("There are no links!", {
+			locale: userLocale,
+		});
+		return;
 	}
 
 	// Create dropdown
@@ -131,11 +157,21 @@ async function handle(bot: Bot, interaction: Interaction) {
 
 	const filters = [
 		{
-			label: "Lightspeed",
+			label: await accessConfig.getTranslation({
+				type: "in_command",
+				searchString: "Lightspeed",
+				commandTarget: "panel",
+				isEmbed: true,
+			}, userLocale),
 			value: "ls",
 		},
 		{
-			label: "Other",
+			label: await accessConfig.getTranslation({
+				type: "in_command",
+				searchString: "other",
+				commandTarget: "panel",
+				isEmbed: true,
+			}, userLocale),
 			value: "other",
 		},
 	];
@@ -189,7 +225,12 @@ async function handle(bot: Bot, interaction: Interaction) {
 						},
 						{
 							type: MessageComponentTypes.Button,
-							label: "Report",
+							label: await accessConfig.getTranslation({
+								type: "in_command",
+								searchString: "Report",
+								commandTarget: "panel",
+								isEmbed: true,
+							}, userLocale),
 							customId: "report",
 							style: ButtonStyles.Danger,
 							disabled: false,
@@ -207,5 +248,4 @@ async function handle(bot: Bot, interaction: Interaction) {
 	);
 }
 
-const adminOnly = true;
-export { adminOnly, data, handle };
+export { commandConfig, data, handle };
